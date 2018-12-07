@@ -119,7 +119,7 @@ module Rossum
     end
 
     def call
-      auth="secret_key #{token}"
+      auth="secret_key #{@token}"
 
       RestClient.log = 'stdout'
 
@@ -143,7 +143,7 @@ module Rossum
     end
 
     def call
-      auth = "secret_key #{token}"
+      auth = "secret_key #{@token}"
 
       RestClient.log = 'stdout'
 

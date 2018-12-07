@@ -109,12 +109,12 @@ module Rossum
   end
 
   class Sender
-    def self.call(dataset, token)
-      new(dataset, token).call
+    def self.call(io, token)
+      new(io, token).call
     end
 
-    def initialize(dataset, token)
-      @dataset = dataset
+    def initialize(io, token)
+      @io = io
       @token = token
     end
 
@@ -124,7 +124,7 @@ module Rossum
       RestClient.log = 'stdout'
 
       response = RestClient.post "https://all.rir.rossum.ai/document",
-        { file: File.new(@dataset.source_path, 'rb') },
+        { file: @io },
         { Authorization: auth }
 
       JSON.parse(response.body)
@@ -132,12 +132,11 @@ module Rossum
   end
 
   class Downloader
-    def self.call(dataset, id, token)
+    def self.call(id, token)
       new(dataset, id, token).call
     end
 
-    def initialize(dataset, id, token)
-      @dataset = dataset
+    def initialize(id, token)
       @id = id
       @token = token
     end

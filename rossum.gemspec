@@ -19,6 +19,6 @@ Gem::Specification.new do |spec|
   end
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'restclient'
+  spec.add_dependency 'rest-client'
   spec.add_development_dependency 'bundler'
 end

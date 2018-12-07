@@ -110,7 +110,7 @@ module Rossum
 
   class Sender
     def self.call(dataset, token)
-      new(dataset).call
+      new(dataset, token).call
     end
 
     def initialize(dataset, token)

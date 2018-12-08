@@ -1,4 +1,3 @@
-require 'restclient'
 require 'json'
 
 module Rossum
@@ -109,23 +108,33 @@ module Rossum
   end
 
   class Sender
-    def self.call(io, token)
-      new(io, token).call
+    BOUNDARY = '0123456789ABLEWASIEREISAWELBA9876543210'.freeze
+
+    def self.call(raw_content, filename, content_type, token)
+      new(raw_content, filename, content_type, token).call
     end
 
-    def initialize(io, token)
-      @io = io
+    def initialize(raw_content, filename, content_type, token)
+      @raw_content = raw_content
+      @filename = filename
+      @content_type = content_type
       @token = token
     end
 
     def call
-      auth="secret_key #{@token}"
+      headers = { 'Content-Type' => "multipart/form-data; boundary=#{BOUNDARY}",
+                  'Authorization' => "secret_key #{@token}"
+      }
 
-      RestClient.log = 'stdout'
+      data =
+        "--#{BOUNDARY}\r\nContent-Disposition: form-data; name=\"file\"; filename=\"#{@filename}\"\r\nContent-Type: #{@mime_type}\r\n\r\n#{@raw_content}\r\n--#{BOUNDARY}--"
 
-      response = RestClient.post "https://all.rir.rossum.ai/document",
-        { file: @io },
-        { Authorization: auth }
+      http = Net::HTTP.new("all.rir.rossum.ai", 443)
+      http.use_ssl = true
+
+      response = http.start do |con|
+        con.post('/document', data, headers)
+      end
 
       JSON.parse(response.body)
     end
@@ -133,7 +142,7 @@ module Rossum
 
   class Downloader
     def self.call(id, token)
-      new(dataset, id, token).call
+      new(id, token).call
     end
 
     def initialize(id, token)
@@ -142,11 +151,15 @@ module Rossum
     end
 
     def call
-      auth = "secret_key #{@token}"
+      http = Net::HTTP.new("all.rir.rossum.ai", 443)
+      http.use_ssl = true
+      uri = URI("https://all.rir.rossum.ai/document/#{@id}")
+      req = Net::HTTP::Get.new(uri)
+      req['Authorization'] = "secret_key #{@token}"
 
-      RestClient.log = 'stdout'
-
-      response = RestClient.get "https://all.rir.rossum.ai/document/#{@id}", { Authorization: auth }
+      response = http.start do |con|
+        con.request(req)
+      end
 
       JSON.parse(response.body)
     end

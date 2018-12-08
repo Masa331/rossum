@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = 'rossum'
-  spec.version       = '0.0.5'
+  spec.version       = '0.0.6'
   spec.authors       = ['Premysl Donat']
   spec.email         = ['pdonat@seznam.cz']
 
@@ -19,6 +19,5 @@ Gem::Specification.new do |spec|
   end
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'rest-client'
   spec.add_development_dependency 'bundler'
 end

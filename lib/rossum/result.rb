@@ -70,6 +70,10 @@ module Rossum
       value_for('sender_ic')
     end
 
+    def sender_vat_id
+      value_for('sender_vat_id')
+    end
+
     def sender_dic
       value_for('sender_dic')
     end
@@ -80,6 +84,10 @@ module Rossum
 
     def recipient_ic
       value_for('recipient_ic')
+    end
+
+    def recipient_vat_id
+      value_for('recipient_vat_id')
     end
 
     def recipient_dic
